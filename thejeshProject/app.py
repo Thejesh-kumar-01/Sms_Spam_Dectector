@@ -61,22 +61,29 @@ def preprocess_text(text):
     
     return processed_text
 
-
 def load_model():
     """
-    Load the trained model and vectorizer from pickle files.
+    Load the trained model and vectorizer from pickle files using relative paths.
     """
+    # Get the directory where app.py is located
+    current_dir = os.path.dirname(__file__)
+    
+    # Create absolute paths to the files
+    model_path = os.path.join(current_dir, 'model.pkl')
+    vectorizer_path = os.path.join(current_dir, 'vectorizer.pkl')
+
     try:
-        with open('model.pkl', 'rb') as f:
+        with open(model_path, 'rb') as f:
             model = pickle.load(f)
         
-        with open('vectorizer.pkl', 'rb') as f:
+        with open(vectorizer_path, 'rb') as f:
             vectorizer = pickle.load(f)
         
         return model, vectorizer
     except FileNotFoundError:
-        st.error("Model files not found! Please run 'train_model.py' first to train the model.")
+        st.error(f"Model files not found at {current_dir}! Please ensure model.pkl and vectorizer.pkl are in the same folder as app.py.")
         st.stop()
+
 
 
 # Custom CSS for modern glassmorphism UI
@@ -380,4 +387,5 @@ if __name__ == "__main__":
         nltk.download('stopwords', quiet=True)
     
     main()
+
 
